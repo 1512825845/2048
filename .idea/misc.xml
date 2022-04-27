@@ -5,6 +5,14 @@
       <map>
         <entry key="..\:/2048/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/2048/app/src/main/res/menu/main.xml" value="0.25364583333333335" />
+        <entry key="..\:/Documents/code/2048/app/src/main/res/drawable/bg_cell.xml" value="0.2345" />
+        <entry key="..\:/Documents/code/2048/app/src/main/res/drawable/bg_score_panel.xml" value="0.2345" />
+        <entry key="..\:/Documents/code/2048/app/src/main/res/drawable/button_select.xml" value="0.2345" />
+        <entry key="..\:/Documents/code/2048/app/src/main/res/drawable/ic_cheat_kick_starter.xml" value="0.2345" />
+        <entry key="..\:/Documents/code/2048/app/src/main/res/drawable/ic_launcher_background.xml" value="0.246" />
+        <entry key="..\:/Documents/code/2048/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Documents/code/2048/app/src/main/res/menu/main.xml" value="0.25364583333333335" />
+        <entry key="..\:/Documents/code/2048/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.246" />
       </map>
     </option>
   </component>

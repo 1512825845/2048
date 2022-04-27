@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">2048</string>
     <string name="score">Score</string>
+    <string name="新游戏">新游戏</string>
+    <string name="background">background</string>
+    <string name="最高分">最高分</string>
+    <string name="game_mode_classics">经典模式</string>
+    <string name="tv_current_score">当前分数</string>
+    <string name="btn_option">配置</string>
+    <string name="btn_reset">重置</string>
 </resources>
