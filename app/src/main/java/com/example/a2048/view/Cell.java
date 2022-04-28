@@ -38,6 +38,9 @@ public class Cell extends FrameLayout {
         if(x < 0){
             showNumber.setText("ERROR");
         }
+        else if(x == 0){
+            showNumber.setText("");
+        }
         else {
             showNumber.setText(String.valueOf(x));
         }
