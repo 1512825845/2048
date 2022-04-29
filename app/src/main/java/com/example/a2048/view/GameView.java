@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.widget.GridLayout;
 
+import com.example.a2048.app.ConfigManger;
 import com.example.a2048.db.CellPoint;
 import com.example.a2048.util.DensityUtil;
 import com.example.a2048.db.GameDataBase;
@@ -55,7 +56,7 @@ public class GameView extends GridLayout {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void init(){
+    public void init(){
         swipe = true;
         if(mode == 0)
             columnCnt = 4;
@@ -117,7 +118,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            updateScore(num * 2);
+                            recordScore(num * 2);
                             prevNum = -1;
                         }
                     }
@@ -161,7 +162,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            updateScore(num * 2);
+                            recordScore(num * 2);
                             prevNum = -1;
                         }
                     }
@@ -205,7 +206,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            updateScore(num * 2);
+                            recordScore(num * 2);
                             prevNum = -1;
                         }
                     }
@@ -249,7 +250,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            updateScore(num * 2);
+                            recordScore(num * 2);
                             prevNum = -1;
                         }
                     }
@@ -286,10 +287,10 @@ public class GameView extends GridLayout {
         }
     }
 
-    private void updateScore(int score) {
-        Intent intent = new Intent("UPDATE_SCORE");
-        intent.putExtra("KEY_SCORE", score);
-        getContext().sendBroadcast(intent);
+    private void recordScore(int score) {
+        Intent intent = new Intent("UPDATE_CURRENT_SCORE");
+        intent.putExtra("SCORE", score);
+        //TODO: 无法向MainActivity类传递信息
     }
 
     private int getSwipeDir(float offsetX, float offsetY) {

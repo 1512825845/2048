@@ -1,11 +1,23 @@
 <resources>
     <string name="app_name">2048</string>
     <string name="score">Score</string>
-    <string name="新游戏">新游戏</string>
     <string name="background">background</string>
-    <string name="最高分">最高分</string>
     <string name="game_mode_classics">经典模式</string>
-    <string name="tv_current_score">当前分数</string>
-    <string name="btn_option">配置</string>
     <string name="btn_reset">重置</string>
+    <string name="tv_current_score">当前分数</string>
+    <string name="best_score_rank">最高分(%1$d)</string>
+    <string name="tv_configuration_option">参数配置</string>
+    <string name="btn_confirm">确认</string>
+    <string name="btn_cancel">取消</string>
+    <string name="tv_game_difficulty">游戏难度</string>
+    <string name="tv_setting_volume">游戏音效</string>
+    <string name="btn_volume_on">开启</string>
+    <string name="btn_volume_off">关闭</string>
+    <string name="tv_goal_time">2048达成次数</string>
+    <string name="btn_option">配置</string>
+    <string name="tip">提示</string>
+    <string name="tv_i_know">我知道了</string>
+    <string name="tip_reset_btn">重置后将丢失当前游戏进度，确认重置？</string>
+    <string name="tv_start">开始游戏</string>
+    <string name="tv_go_on">继续</string>
 </resources>
