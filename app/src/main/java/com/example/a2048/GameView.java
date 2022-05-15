@@ -112,7 +112,7 @@ public class GameView extends GridLayout{
 
     }
 
-    public void startGame(){
+    public static void startGame(){
 
         MainActivity.getMainActivity().clearScore();
 
@@ -128,7 +128,7 @@ public class GameView extends GridLayout{
 
     }
 
-    private void addRandomNum(){
+    public static void addRandomNum(){
 
         emptyPoints.clear();
 
@@ -312,7 +312,7 @@ public class GameView extends GridLayout{
 //        }
     }
 
-    private Card[][] cardsMap = new Card[4][4];
-    private List<Point> emptyPoints = new ArrayList<Point>();
+    public static Card[][] cardsMap = new Card[4][4];
+    public static List<Point> emptyPoints = new ArrayList<Point>();
 }
 

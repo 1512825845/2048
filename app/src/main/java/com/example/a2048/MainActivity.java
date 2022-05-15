@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         tvScore = (TextView) findViewById(R.id.tvSorce);
 //        bt = (Button) findViewById(R.id.bt_cx);
 //        bt.setOnClickListener(this::onClick);
-        BastScode bastScode = new BastScode(this);
-        bestScores = bastScode.getBastScode();
+        TopScore bastScode = new TopScore(this);
+        bestScores = bastScode.getTopScore();
         tvBestScore.setText(bestScores+"");
     }
     public boolean onCreateOptionsMenu(Menu menu){
@@ -86,7 +86,7 @@ public void onClick(View view){
             dialog3.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
+                    GameView.startGame();
                 }
             });
             dialog3.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -112,8 +112,8 @@ public void onClick(View view){
         showScore();
         if(score>bestScores){
             bestScores = score;
-            BastScode bs = new BastScode(this);
-            bs.setBestScode(bestScores);
+            TopScore bs = new TopScore(this);
+            bs.setTopScore(bestScores);
             tvBestScore.setText(bestScores+"");
         }
     }
