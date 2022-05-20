@@ -34,7 +34,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.lang.reflect.Type;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView currentScore;
     private TextView bestScores;
     private TextView titleDescribe;
@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton reset;
     private MaterialButton menu;
     private GameView gameView;
+    public Config config;
+    private String id;
 
     private static MainActivity mainActivity = null;
     public MainActivity(){
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         }
+        id = "root";
         titleDescribe = findViewById(R.id.tv_title_describe);
         currentScore = findViewById(R.id.tv_current_score);
         bestScores = findViewById(R.id.tv_best_score);
@@ -76,12 +79,21 @@ public class MainActivity extends AppCompatActivity {
         menu = findViewById(R.id.btn_option);
         gameView = findViewById(R.id.game_view);
 
-        bestScores.setText(String.valueOf(Config.BestScore));
+        config = new Config(this);
+        if(config.getScore(id, "best") <= 0) {
+            config.insertScore(id, "best","current" , 0, 0);
+        }
+
+        config.setScore(id, "current", 0);
+
+        bestScores.setText(String.valueOf(config.getScore(id, "best")));
         bestRank.setText(getString(R.string.best_score_rank));
-        currentScore.setText(String.valueOf(ConfigManger.getCurrentScore(this)));
+        currentScore.setText(String.valueOf(config.getScore(id, "current")));
         gameView.init();
 
         setTextStyle(titleDescribe);
+        reset.setOnClickListener(this);
+        menu.setOnClickListener(this);
 
     }
 
@@ -109,5 +121,18 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isLightColor(int color) {
         return ColorUtils.calculateLuminance(color) >= 0.5;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_reset:
+                gameView.reset();
+                break;
+            case R.id.btn_option:
+                break;
+            default:
+                break;
+        }
     }
 }

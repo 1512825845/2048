@@ -5,7 +5,7 @@
     <string name="game_mode_classics">经典模式</string>
     <string name="btn_reset">重置</string>
     <string name="tv_current_score">当前分数</string>
-    <string name="best_score_rank">最高分(%1$d)</string>
+    <string name="best_score_rank">最高分</string>
     <string name="tv_configuration_option">参数配置</string>
     <string name="btn_confirm">确认</string>
     <string name="btn_cancel">取消</string>
