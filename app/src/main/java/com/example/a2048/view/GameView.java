@@ -2,14 +2,19 @@ package com.example.a2048.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.GridLayout;
+import android.widget.TextView;
 
+import com.example.a2048.MainActivity;
+import com.example.a2048.R;
+import com.example.a2048.app.Config;
 import com.example.a2048.app.ConfigManger;
 import com.example.a2048.db.CellPoint;
 import com.example.a2048.util.DensityUtil;
@@ -34,8 +39,10 @@ public class GameView extends GridLayout {
     private final List<Integer> prevNumList = new ArrayList<>();
     private int prevNum = -1;
     private boolean win = false;
+    private Config config;
+    private static final String id = "root";
 
-    public GameView(Context context, AttributeSet attrs, int defStyle){
+    public GameView(Context context, AttributeSet attrs, int defStyle, Config config){
         super(context, attrs, defStyle);
         mode = 0;
         setOrientation(GridLayout.HORIZONTAL);
@@ -57,6 +64,7 @@ public class GameView extends GridLayout {
 
     @SuppressLint("ClickableViewAccessibility")
     public void init(){
+        this.config  = MainActivity.getMainActivity().config;
         swipe = true;
         if(mode == 0)
             columnCnt = 4;
@@ -118,7 +126,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            recordScore(num * 2);
+                            recordScore(num);
                             prevNum = -1;
                         }
                     }
@@ -162,7 +170,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            recordScore(num * 2);
+                            recordScore(num);
                             prevNum = -1;
                         }
                     }
@@ -206,7 +214,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            recordScore(num * 2);
+                            recordScore(num);
                             prevNum = -1;
                         }
                     }
@@ -249,7 +257,7 @@ public class GameView extends GridLayout {
                             prevNum = num;
                         }
                         else {
-                            currentNumList.add(num * 2);
+                            currentNumList.add(num);
                             recordScore(num * 2);
                             prevNum = -1;
                         }
@@ -288,9 +296,17 @@ public class GameView extends GridLayout {
     }
 
     private void recordScore(int score) {
-        Intent intent = new Intent("UPDATE_CURRENT_SCORE");
-        intent.putExtra("SCORE", score);
-        //TODO: 无法向MainActivity类传递信息
+        TextView bestScore = MainActivity.getMainActivity().findViewById(R.id.tv_best_score);
+        TextView currentScore = MainActivity.getMainActivity().findViewById(R.id.tv_current_score);
+        int best_score = this.config.getScore(id, "best");
+        int current_score = this.config.getScore(id, "current");
+        current_score += score;
+        if(current_score > best_score){
+            this.config.setScore(id, "best", current_score);
+            bestScore.setText(String.valueOf(current_score));
+        }
+        this.config.setScore(id, "current", current_score);
+        currentScore.setText(String.valueOf(current_score));
     }
 
     private int getSwipeDir(float offsetX, float offsetY) {
@@ -396,5 +412,8 @@ public class GameView extends GridLayout {
         resetView();
         setNum();
         setNum();
+        config.setScore(id, "current", 0);
+        TextView currentScore = MainActivity.getMainActivity().findViewById(R.id.tv_current_score);
+        currentScore.setText(String.valueOf(0));
     }
 }
