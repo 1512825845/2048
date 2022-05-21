@@ -7,9 +7,7 @@ import androidx.core.graphics.ColorUtils;
 
 import android.content.Context;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +17,7 @@ import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 //import android.view.KeyEvent;
 //import android.os.TokenWatcher;
@@ -26,13 +25,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ImageView;
 
-import com.example.a2048.app.Config;
-import com.example.a2048.app.ConfigManger;
+import com.example.a2048.util.ScoreUtil;
 import com.example.a2048.util.DensityUtil;
+import com.example.a2048.view.GameOverDialog;
 import com.example.a2048.view.GameView;
 import com.google.android.material.button.MaterialButton;
-
-import java.lang.reflect.Type;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView currentScore;
@@ -42,8 +39,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MaterialButton reset;
     private MaterialButton menu;
     private GameView gameView;
-    public Config config;
+    public ScoreUtil scoreUtil;
     private String id;
+    public GameOverDialog gameOverDialog;
+    private MaterialButton again;
+    private MaterialButton goOn;
 
     private static MainActivity mainActivity = null;
     public MainActivity(){
@@ -79,22 +79,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         menu = findViewById(R.id.btn_option);
         gameView = findViewById(R.id.game_view);
 
-        config = new Config(this);
-        if(config.getScore(id, "best") <= 0) {
-            config.insertScore(id, "best","current" , 0, 0);
+        gameOverDialog = new GameOverDialog(this, R.style.Theme_2048);
+
+        scoreUtil = new ScoreUtil(this);
+        if(scoreUtil.getScore(id, "best") <= 0) {
+            scoreUtil.insertScore(id, "best","current" , 0, 0);
         }
 
-        config.setScore(id, "current", 0);
+        scoreUtil.setScore(id, "current", 0);
 
-        bestScores.setText(String.valueOf(config.getScore(id, "best")));
+        bestScores.setText(String.valueOf(scoreUtil.getScore(id, "best")));
         bestRank.setText(getString(R.string.best_score_rank));
-        currentScore.setText(String.valueOf(config.getScore(id, "current")));
+        currentScore.setText(String.valueOf(scoreUtil.getScore(id, "current")));
         gameView.init();
 
         setTextStyle(titleDescribe);
         reset.setOnClickListener(this);
         menu.setOnClickListener(this);
 
+        again = LayoutInflater.from(this).
+                inflate(R.layout.game_over_dialog, null).findViewById(R.id.tv_reset);
+
+        goOn = LayoutInflater.from(this).
+                inflate(R.layout.game_over_dialog, null).findViewById(R.id.tv_go_on);
+
+        again.setOnClickListener(this);
+        goOn.setOnClickListener(this);
     }
 
     private void setTextStyle(TextView titleDescribe) {
@@ -135,4 +145,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    public void GameOver(View v){
+        switch (v.getId()){
+            case R.id.tv_reset:
+                gameView.reset();
+                gameOverDialog.dismiss();
+                break;
+            case R.id.tv_go_on:
+                gameOverDialog.dismiss();
+                break;
+            default:
+                break;
+        }
+    }
+
 }

@@ -6,16 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
 import com.example.a2048.MainActivity;
 import com.example.a2048.R;
-import com.example.a2048.app.Config;
-import com.example.a2048.app.ConfigManger;
+import com.example.a2048.util.ScoreUtil;
 import com.example.a2048.db.CellPoint;
 import com.example.a2048.util.DensityUtil;
 import com.example.a2048.db.GameDataBase;
@@ -39,10 +36,11 @@ public class GameView extends GridLayout {
     private final List<Integer> prevNumList = new ArrayList<>();
     private int prevNum = -1;
     private boolean win = false;
-    private Config config;
+    private ScoreUtil scoreUtil;
     private static final String id = "root";
+    private GameOverDialog gameOverDialog;
 
-    public GameView(Context context, AttributeSet attrs, int defStyle, Config config){
+    public GameView(Context context, AttributeSet attrs, int defStyle){
         super(context, attrs, defStyle);
         mode = 0;
         setOrientation(GridLayout.HORIZONTAL);
@@ -64,7 +62,8 @@ public class GameView extends GridLayout {
 
     @SuppressLint("ClickableViewAccessibility")
     public void init(){
-        this.config  = MainActivity.getMainActivity().config;
+        this.scoreUtil = MainActivity.getMainActivity().scoreUtil;
+        this.gameOverDialog = MainActivity.getMainActivity().gameOverDialog;
         swipe = true;
         if(mode == 0)
             columnCnt = 4;
@@ -257,8 +256,8 @@ public class GameView extends GridLayout {
                             prevNum = num;
                         }
                         else {
-                            currentNumList.add(num);
-                            recordScore(num * 2);
+                            currentNumList.add(num * 2);
+                            recordScore(num);
                             prevNum = -1;
                         }
                     }
@@ -290,22 +289,27 @@ public class GameView extends GridLayout {
         getEmptyCell();
         if(emptyCellPoint.size() == 0){
             if(win){
-                return;
+                gameOverDialog.setTitle("Here comes 2048");
             }
+            else{
+                gameOverDialog.setTitle("寄");
+            }
+            gameOverDialog.setFinalScore(String.valueOf(scoreUtil.getScore(id, "current")));
+            gameOverDialog.show();
         }
     }
 
     private void recordScore(int score) {
         TextView bestScore = MainActivity.getMainActivity().findViewById(R.id.tv_best_score);
         TextView currentScore = MainActivity.getMainActivity().findViewById(R.id.tv_current_score);
-        int best_score = this.config.getScore(id, "best");
-        int current_score = this.config.getScore(id, "current");
+        int best_score = this.scoreUtil.getScore(id, "best");
+        int current_score = this.scoreUtil.getScore(id, "current");
         current_score += score;
         if(current_score > best_score){
-            this.config.setScore(id, "best", current_score);
+            this.scoreUtil.setScore(id, "best", current_score);
             bestScore.setText(String.valueOf(current_score));
         }
-        this.config.setScore(id, "current", current_score);
+        this.scoreUtil.setScore(id, "current", current_score);
         currentScore.setText(String.valueOf(current_score));
     }
 
@@ -412,7 +416,7 @@ public class GameView extends GridLayout {
         resetView();
         setNum();
         setNum();
-        config.setScore(id, "current", 0);
+        scoreUtil.setScore(id, "current", 0);
         TextView currentScore = MainActivity.getMainActivity().findViewById(R.id.tv_current_score);
         currentScore.setText(String.valueOf(0));
     }
