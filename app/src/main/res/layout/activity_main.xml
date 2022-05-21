@@ -132,12 +132,12 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_option"
+        android:id="@+id/btn_reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:minWidth="0dp"
-        android:text="@string/btn_option"
+        android:text="@string/btn_reset"
         android:textColor="@color/colorTextDark"
         app:backgroundTint="@color/colorWhiteDim"
         app:cornerRadius="12dp"
@@ -196,20 +196,5 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="ContentDescription" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_reset"
-        android:layout_width="68dp"
-        android:layout_height="48dp"
-        android:layout_margin="12dp"
-        android:layout_marginEnd="12dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="@string/btn_reset"
-        android:textColor="@color/colorTextDark"
-        android:textSize="14sp"
-        app:backgroundTint="@color/colorWhiteDim"
-        app:cornerRadius="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,8 @@ package com.example.a2048.view;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.view.Gravity;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -16,6 +18,9 @@ public class Cell extends FrameLayout {
 
     private TextView showNumber;
     private int num;
+    public boolean canMerge;
+    private final ScaleAnimation animation = new ScaleAnimation(0.7f, 1f, 0.7f, 1f,
+            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
     public Cell(@NonNull Context context) {
         super(context);
@@ -30,6 +35,7 @@ public class Cell extends FrameLayout {
         params.setMargins(DensityUtil.dp2px(context), DensityUtil.dp2px(context), 0, 0);
         addView(showNumber, params);
         setNum(0);
+        canMerge = false;
     }
 
     public void setNum(int x){
@@ -83,5 +89,10 @@ public class Cell extends FrameLayout {
 
     public TextView getCell(){
         return showNumber;
+    }
+
+    public void animation(){
+        animation.setDuration(100);
+        this.startAnimation(animation);
     }
 }
