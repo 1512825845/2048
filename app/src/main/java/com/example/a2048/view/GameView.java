@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
@@ -35,6 +38,7 @@ public class GameView extends GridLayout {
     private final List<Integer> currentNumList = new ArrayList<>();
     private final List<Integer> prevNumList = new ArrayList<>();
     private int prevNum = -1;
+    private Point point;
     private boolean win = false;
     private ScoreUtil scoreUtil;
     private static final String id = "root";
@@ -62,6 +66,7 @@ public class GameView extends GridLayout {
 
     @SuppressLint("ClickableViewAccessibility")
     public void init(){
+        point = new Point(0, 0);
         this.scoreUtil = MainActivity.getMainActivity().scoreUtil;
         this.gameOverDialog = MainActivity.getMainActivity().gameOverDialog;
         swipe = true;
@@ -113,7 +118,10 @@ public class GameView extends GridLayout {
         boolean merge = false;
         for(int i = 0; i < columnCnt; i++){
             for(int j = 0; j < columnCnt; j++) {
+
                 int num = cells[j][i].getNum();
+                point.set(j, i);
+
                 prevNumList.add(num);
                 if(num != 0){
                     if(prevNum == -1)
@@ -125,12 +133,15 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            recordScore(num);
+                            recordScore(num * 2);
                             prevNum = -1;
+                            cells[j][i].canMerge = true;
+                            cells[point.x][point.y].canMerge = true;
                         }
                     }
                 }
             }
+
             if(prevNum != -1){
                 currentNumList.add(prevNum);
             }
@@ -140,6 +151,10 @@ public class GameView extends GridLayout {
             if(!currentNumList.equals(prevNumList)){
                 merge = true;
             }
+
+            //TODO: 滑动动画，初步设想是 1. 标记可以合并的方块，在第一块不能被合并的方块处停下 2. 合并可以合并的方块，并以缩放的方式出现
+            //遇到的问题是： 滑动动画的实现 标记后如何设置滑动距离 如何合并（由于方块是一个Layout， Layout滑动的话就是一整个方块滑动，而做不出想要的效果）
+
             prevNumList.clear();
             for(int j = 0; j < currentNumList.size(); j++){
                 cells[j][i].setNum(currentNumList.get(j));
@@ -169,7 +184,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            recordScore(num);
+                            recordScore(num * 2);
                             prevNum = -1;
                         }
                     }
@@ -213,7 +228,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            recordScore(num);
+                            recordScore(num * 2);
                             prevNum = -1;
                         }
                     }
@@ -257,7 +272,7 @@ public class GameView extends GridLayout {
                         }
                         else {
                             currentNumList.add(num * 2);
-                            recordScore(num);
+                            recordScore(num * 2);
                             prevNum = -1;
                         }
                     }
@@ -286,16 +301,35 @@ public class GameView extends GridLayout {
     }
 
     private void check() {
+        boolean isOver = true;
         getEmptyCell();
         if(emptyCellPoint.size() == 0){
-            if(win){
+            if(win) {
                 gameOverDialog.setTitle("Here comes 2048");
+                gameOverDialog.setFinalScore(String.valueOf(scoreUtil.getScore(id, "current")));
+                gameOverDialog.show();
             }
-            else{
-                gameOverDialog.setTitle("寄");
+            else {
+                for (int i = 0; i < columnCnt; i++) {
+                    if (!isOver) break;
+                    for (int j = 0; j < columnCnt; j++) {
+
+                        if (j < columnCnt - 1)
+                            if (cells[i][j].getNum() == cells[i][j + 1].getNum())
+                                isOver = false;
+
+
+                        if (i < columnCnt - 1)
+                            if (cells[i][j].getNum() == cells[i + 1][j].getNum())
+                                isOver = false;
+                    }
+                }
+                if(isOver){
+                    gameOverDialog.setTitle("寄");
+                    gameOverDialog.setFinalScore(String.valueOf(scoreUtil.getScore(id, "current")));
+                    gameOverDialog.show();
+                }
             }
-            gameOverDialog.setFinalScore(String.valueOf(scoreUtil.getScore(id, "current")));
-            gameOverDialog.show();
         }
     }
 
@@ -365,7 +399,7 @@ public class GameView extends GridLayout {
         if(emptyCellPoint.size() > 0){
             CellPoint cellPoint = emptyCellPoint.get((int)(Math.random() * emptyCellPoint.size()));
             cells[cellPoint.getX()][cellPoint.getY()].setNum(Math.random() >= 0.5 ? 2 : 4);
-            //TODO 出现的动画
+            cells[cellPoint.getX()][cellPoint.getY()].animation();
         }
     }
 

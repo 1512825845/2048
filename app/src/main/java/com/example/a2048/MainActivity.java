@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView titleDescribe;
     private TextView bestRank;
     private MaterialButton reset;
-    private MaterialButton menu;
     private GameView gameView;
     public ScoreUtil scoreUtil;
     private String id;
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bestScores = findViewById(R.id.tv_best_score);
         bestRank = findViewById(R.id.tv_best_rank);
         reset = findViewById(R.id.btn_reset);
-        menu = findViewById(R.id.btn_option);
         gameView = findViewById(R.id.game_view);
 
         gameOverDialog = new GameOverDialog(this, R.style.Theme_2048);
@@ -95,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setTextStyle(titleDescribe);
         reset.setOnClickListener(this);
-        menu.setOnClickListener(this);
 
         again = LayoutInflater.from(this).
                 inflate(R.layout.game_over_dialog, null).findViewById(R.id.tv_reset);
@@ -138,8 +135,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.btn_reset:
                 gameView.reset();
-                break;
-            case R.id.btn_option:
                 break;
             default:
                 break;
