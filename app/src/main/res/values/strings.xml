@@ -20,4 +20,6 @@
     <string name="tip_reset_btn">重置后将丢失当前游戏进度，确认重置？</string>
     <string name="tv_start">开始游戏</string>
     <string name="tv_go_on">继续</string>
+    <string name="tv_share">分享</string>
+    <string name="tv_reset">再来一次</string>
 </resources>

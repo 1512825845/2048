@@ -1,4 +1,4 @@
-package com.example.a2048.app;
+package com.example.a2048.util;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -8,10 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.a2048.db.ScoreDataBase;
 
-public class Config {
+public class ScoreUtil {
 
     private ScoreDataBase scoreDataBase;
-    public Config(Context context){
+    public ScoreUtil(Context context){
         scoreDataBase = new ScoreDataBase(context);
     }
 
@@ -33,7 +33,6 @@ public class Config {
         values.put(name, String.valueOf(score));
         db.update("Score", values, "user_name=?", new String[]{id});
     }
-
     public void insertScore(String id, String name1, String name2, int score1, int score2){
         SQLiteDatabase db = scoreDataBase.getWritableDatabase();
         ContentValues values = new ContentValues();
