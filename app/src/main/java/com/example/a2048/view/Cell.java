@@ -91,8 +91,13 @@ public class Cell extends FrameLayout {
         return showNumber;
     }
 
-    public void animation(){
-        animation.setDuration(100);
+    public void animation(String flag){
+        if(flag.equals("create"))
+            animation.setDuration(100);
+        else
+            animation.setDuration(50);
         this.startAnimation(animation);
     }
+
+
 }

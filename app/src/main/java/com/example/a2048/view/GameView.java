@@ -8,8 +8,6 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
@@ -38,7 +36,6 @@ public class GameView extends GridLayout {
     private final List<Integer> currentNumList = new ArrayList<>();
     private final List<Integer> prevNumList = new ArrayList<>();
     private int prevNum = -1;
-    private Point point;
     private boolean win = false;
     private ScoreUtil scoreUtil;
     private static final String id = "root";
@@ -48,25 +45,24 @@ public class GameView extends GridLayout {
         super(context, attrs, defStyle);
         mode = 0;
         setOrientation(GridLayout.HORIZONTAL);
-        gameDataBase = new GameDataBase(context, "2048DB", null, 1);
+        gameDataBase = new GameDataBase(context, "G4", null, 1);
         init();
     }
     public GameView(Context context){
         super(context);
         mode = 0;
-        gameDataBase = new GameDataBase(context, "2048DB", null, 1);
+        gameDataBase = new GameDataBase(context, "G4", null, 1);
         init();
     }
     public GameView(Context context, AttributeSet attrs){
         super(context, attrs);
         mode = 0;
-        gameDataBase = new GameDataBase(context, "2048DB", null, 1);
+        gameDataBase = new GameDataBase(context, "G4", null, 1);
         init();
     }
 
     @SuppressLint("ClickableViewAccessibility")
     public void init(){
-        point = new Point(0, 0);
         this.scoreUtil = MainActivity.getMainActivity().scoreUtil;
         this.gameOverDialog = MainActivity.getMainActivity().gameOverDialog;
         swipe = true;
@@ -98,10 +94,10 @@ public class GameView extends GridLayout {
                                 swipeRight();
                                 break;
                             case 3:
-                                swipeUp();
+                                swipeDown();
                                 break;
                             case 4:
-                                swipeDown();
+                                swipeUp();
                                 break;
                             default:
                                 break;
@@ -114,18 +110,21 @@ public class GameView extends GridLayout {
         });
     }
 
-    private void swipeDown() {
+    private void swipeUp() {
+        Point point = new Point();
         boolean merge = false;
         for(int i = 0; i < columnCnt; i++){
             for(int j = 0; j < columnCnt; j++) {
 
                 int num = cells[j][i].getNum();
-                point.set(j, i);
 
                 prevNumList.add(num);
                 if(num != 0){
-                    if(prevNum == -1)
+
+                    if(prevNum == -1) {
                         prevNum = num;
+                        point.set(j, i);
+                    }
                     else {
                         if(prevNum != num) {
                             currentNumList.add(prevNum);
@@ -135,7 +134,6 @@ public class GameView extends GridLayout {
                             currentNumList.add(num * 2);
                             recordScore(num * 2);
                             prevNum = -1;
-                            cells[j][i].canMerge = true;
                             cells[point.x][point.y].canMerge = true;
                         }
                     }
@@ -158,6 +156,10 @@ public class GameView extends GridLayout {
             prevNumList.clear();
             for(int j = 0; j < currentNumList.size(); j++){
                 cells[j][i].setNum(currentNumList.get(j));
+                if(cells[j][i].canMerge) {
+                    cells[j][i].animation("merge");
+                    cells[j][i].canMerge = false;
+                }
             }
             currentNumList.clear();
             prevNum = -1;
@@ -168,15 +170,18 @@ public class GameView extends GridLayout {
         }
     }
 
-    private void swipeUp() {
+    private void swipeDown() {
         boolean merge = false;
+        Point point = new Point();
         for(int i = 0; i < columnCnt; i++){
             for(int j = columnCnt - 1; j >= 0; j--) {
                 int num = cells[j][i].getNum();
                 prevNumList.add(num);
                 if(num != 0){
-                    if(prevNum == -1)
+                    if(prevNum == -1) {
                         prevNum = num;
+                        point.set(j, i);
+                    }
                     else {
                         if(prevNum != num) {
                             currentNumList.add(prevNum);
@@ -186,6 +191,7 @@ public class GameView extends GridLayout {
                             currentNumList.add(num * 2);
                             recordScore(num * 2);
                             prevNum = -1;
+                            cells[point.x][point.y].canMerge = true;
                         }
                     }
                 }
@@ -202,6 +208,10 @@ public class GameView extends GridLayout {
             prevNumList.clear();
             for(int j = columnCnt - 1; j >= 0; j--){
                 cells[j][i].setNum(currentNumList.get(columnCnt - j - 1));
+                if(cells[j][i].canMerge) {
+                    cells[j][i].animation("merge");
+                    cells[j][i].canMerge = false;
+                }
             }
             currentNumList.clear();
             prevNum = -1;
@@ -214,13 +224,16 @@ public class GameView extends GridLayout {
 
     private void swipeRight() {
         boolean merge = false;
+        Point point = new Point();
         for(int i = 0; i < columnCnt; i++){
             for(int j = columnCnt - 1; j >= 0; j--) {
                 int num = cells[i][j].getNum();
                 prevNumList.add(num);
                 if(num != 0){
-                    if(prevNum == -1)
+                    if(prevNum == -1) {
                         prevNum = num;
+                        point.set(i, j);
+                    }
                     else {
                         if(prevNum != num) {
                             currentNumList.add(prevNum);
@@ -230,6 +243,7 @@ public class GameView extends GridLayout {
                             currentNumList.add(num * 2);
                             recordScore(num * 2);
                             prevNum = -1;
+                            cells[point.x][point.y].canMerge = true;
                         }
                     }
                 }
@@ -246,6 +260,10 @@ public class GameView extends GridLayout {
             prevNumList.clear();
             for(int j = columnCnt - 1; j >= 0; j--){
                 cells[i][j].setNum(currentNumList.get(columnCnt - j - 1));
+                if(cells[i][j].canMerge) {
+                    cells[i][j].animation("merge");
+                    cells[i][j].canMerge = false;
+                }
             }
             currentNumList.clear();
             prevNum = -1;
@@ -258,13 +276,17 @@ public class GameView extends GridLayout {
 
     private void swipeLeft() {
         boolean merge = false;
+        Point point = new Point();
         for(int i = 0; i < columnCnt; i++){
             for(int j = 0; j < columnCnt; j++) {
                 int num = cells[i][j].getNum();
                 prevNumList.add(num);
+
                 if(num != 0){
-                    if(prevNum == -1)
+                    if(prevNum == -1) {
                         prevNum = num;
+                        point.set(i, j);
+                    }
                     else {
                         if(prevNum != num) {
                             currentNumList.add(prevNum);
@@ -274,6 +296,7 @@ public class GameView extends GridLayout {
                             currentNumList.add(num * 2);
                             recordScore(num * 2);
                             prevNum = -1;
+                            cells[point.x][point.y].canMerge = true;
                         }
                     }
                 }
@@ -290,6 +313,10 @@ public class GameView extends GridLayout {
             prevNumList.clear();
             for(int j = 0; j < currentNumList.size(); j++){
                 cells[i][j].setNum(currentNumList.get(j));
+                if(cells[i][j].canMerge){
+                    cells[i][j].animation("merge");
+                    cells[i][j].canMerge = false;
+                }
             }
             currentNumList.clear();
             prevNum = -1;
@@ -399,7 +426,7 @@ public class GameView extends GridLayout {
         if(emptyCellPoint.size() > 0){
             CellPoint cellPoint = emptyCellPoint.get((int)(Math.random() * emptyCellPoint.size()));
             cells[cellPoint.getX()][cellPoint.getY()].setNum(Math.random() >= 0.5 ? 2 : 4);
-            cells[cellPoint.getX()][cellPoint.getY()].animation();
+            cells[cellPoint.getX()][cellPoint.getY()].animation("create");
         }
     }
 
@@ -453,5 +480,17 @@ public class GameView extends GridLayout {
         scoreUtil.setScore(id, "current", 0);
         TextView currentScore = MainActivity.getMainActivity().findViewById(R.id.tv_current_score);
         currentScore.setText(String.valueOf(0));
+    }
+
+    public ArrayList<CellPoint> getCurrentProcess(){
+
+        ArrayList<CellPoint> data = new ArrayList<>();
+        for(int i = 0;i < columnCnt; i++){
+            for(int j = 0; j < columnCnt; j++){
+                if(cells[i][j].getNum() > 0)
+                    data.add(new CellPoint(i, j, cells[i][j].getNum()));
+            }
+        }
+        return data;
     }
 }
