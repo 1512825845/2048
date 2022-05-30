@@ -5,8 +5,11 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -25,11 +28,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ImageView;
 
+import com.example.a2048.db.CellPoint;
+import com.example.a2048.db.GameDataBase;
 import com.example.a2048.util.ScoreUtil;
 import com.example.a2048.util.DensityUtil;
 import com.example.a2048.view.GameOverDialog;
 import com.example.a2048.view.GameView;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView currentScore;
@@ -43,6 +52,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public GameOverDialog gameOverDialog;
     private MaterialButton again;
     private MaterialButton goOn;
+    private Timer timer;
+    private static final String DB_GAME_NAME = "G4";
+    private SQLiteDatabase db;
+
 
     private static MainActivity mainActivity = null;
     public MainActivity(){
@@ -60,6 +73,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(timer == null) {
+            timer = new Timer();
+            startClick();
+        }
+    }
+
+    private void startClick() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                saveGameProcess();
+            }
+        }, 50 * 1_000L, 50 * 1_000L);
+    }
+
+    private void saveGameProcess() {
+        db.execSQL("delete from G4");
+        ArrayList<CellPoint> data = gameView.getCurrentProcess();
+        if(data.size() > 2){
+            ContentValues values = new ContentValues();
+            for(CellPoint cellPoint : data){
+                values.put("x", cellPoint.getX());
+                values.put("y", cellPoint.getY());
+                values.put("num", cellPoint.getNum());
+                db.insert("G4",null, values);
+                values.clear();
+            }
+        }
+    }
+
+
     private void initView() {
         if(isLightColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))){
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -69,6 +116,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         }
+
+        db = new GameDataBase(this, "G4", null, 1).
+                getWritableDatabase();
+
         id = "root";
         titleDescribe = findViewById(R.id.tv_title_describe);
         currentScore = findViewById(R.id.tv_current_score);
