@@ -29,11 +29,11 @@ public class Card extends FrameLayout{
     }
 
 
-
+//获取卡片内的数字
     public int getNum() {
         return num;
     }
-
+//设置卡片内的数字
     public void setNum(int num) {
         this.num = num;
         label.setBackgroundColor(getBackground(num));
@@ -45,7 +45,7 @@ public class Card extends FrameLayout{
         }
 
     }
-
+//根据卡片内数字的不同，调整卡片背景
     private int getBackground(int num) {
         int bgcolor = defaultBackColor;
         switch (num) {
@@ -91,7 +91,7 @@ public class Card extends FrameLayout{
         }
         return bgcolor;
     }
-
+//判断当前卡片数字是否和传入卡片数字相等
     public boolean equals(Card o){
         return getNum()==o.getNum();
     }
