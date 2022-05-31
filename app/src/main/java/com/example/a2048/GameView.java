@@ -15,33 +15,29 @@ import java.util.List;
 
 public class GameView extends GridLayout{
 
-//    private static GameView gameView = null;
-//
-//    public static GameView getGameView() {
-//        return gameView;
-//    }
+
 
     public GameView(Context context, AttributeSet attrs, int defStyle){
         super(context, attrs, defStyle);
-//        gameView = this;
+
         initGameView();
     }
     public GameView(Context context){
         super(context);
-//        gameView = this;
+
         initGameView();
     }
     public GameView(Context context, AttributeSet attrs){
         super(context, attrs);
-//        gameView = this;
+
         initGameView();
     }
-
+    //初始化游戏界面
     private void initGameView(){
         setColumnCount(4);
         setBackgroundColor(0xffbbada0);
         addCards(GetCardWidth(),GetCardWidth());
-//        startGame();
+
         setOnTouchListener(new View.OnTouchListener(){
             private float startX,startY,offsetX,offsetY;
 
@@ -79,12 +75,11 @@ public class GameView extends GridLayout{
     protected void onSizeChanged(int w,int h,int oldw,int oldh){
         super.onSizeChanged(w,h,oldw,oldh);
 
-//        int cardWidth = (Math.min(w,h)-10)/4;
-//        addCards(cardWidth,cardWidth);
+
 
         startGame();
     }
-
+    //在界面中加入新数字卡片
     private void addCards(int cardWidth,int cardHeight){
         Card c;
         for (int y = 0; y < 4; y++) {
@@ -97,7 +92,7 @@ public class GameView extends GridLayout{
             }
         }
     }
-
+    //获取卡片相对于屏幕尺寸的大小
     private int GetCardWidth()
     {
 
@@ -111,7 +106,7 @@ public class GameView extends GridLayout{
         return ( cardWidth - 10 ) / 4;
 
     }
-
+    //开始游戏
     public static void startGame(){
 
         MainActivity.getMainActivity().clearScore();
@@ -119,7 +114,7 @@ public class GameView extends GridLayout{
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 4; x++) {
                 cardsMap[x][y].setNum(0);
-//                emptyPoints.add(new Point(x,y));
+
             }
         }
         MainActivity.getMainActivity().score = 0;
@@ -127,7 +122,7 @@ public class GameView extends GridLayout{
         addRandomNum();
 
     }
-
+    //随机添加2或4共两个数字，概率9:1
     public static void addRandomNum(){
 
         emptyPoints.clear();
@@ -142,7 +137,7 @@ public class GameView extends GridLayout{
         Point p = emptyPoints.remove((int) (Math.random()*emptyPoints.size()));
         cardsMap[p.x][p.y].setNum(Math.random()>0.1?2:4);
     }
-
+    //实现各方向滑动功能
     private void swipeLeft(){
         boolean merge = false;
         for (int y = 0; y < 4; y++) {
@@ -263,7 +258,7 @@ public class GameView extends GridLayout{
             check();
         }
     }
-
+    //检测数字是否合并
     private void check(){
         boolean complete = true;
         All:
@@ -293,23 +288,7 @@ public class GameView extends GridLayout{
             }).show();
         }
 
-//        for (int x = 0; x < 4; x++) {
-//            for (int y = 0; y < 4; y++) {
-//                if (cardsMap[x][y].getNum() == 2048){
-//                    new AlertDialog.Builder(getContext()).setTitle("提示").setMessage("你赢了").setPositiveButton("重新开始", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            startGame();
-//                        }
-//                    }).setNegativeButton("退出", new DialogInterface.OnClickListener() {
-//
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            MainActivity.getMainActivity().finish();
-//                        }
-//                    }).show();
-//                }
-//            }
-//        }
+
     }
 
     public static Card[][] cardsMap = new Card[4][4];
