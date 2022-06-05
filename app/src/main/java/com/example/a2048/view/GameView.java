@@ -11,6 +11,8 @@ import android.view.MotionEvent;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.a2048.MainActivity;
 import com.example.a2048.R;
 import com.example.a2048.util.ScoreUtil;
@@ -149,9 +151,6 @@ public class GameView extends GridLayout {
             if(!currentNumList.equals(prevNumList)){
                 merge = true;
             }
-
-            //TODO: 滑动动画，初步设想是 1. 标记可以合并的方块，在第一块不能被合并的方块处停下 2. 合并可以合并的方块，并以缩放的方式出现
-            //遇到的问题是： 滑动动画的实现 标记后如何设置滑动距离 如何合并（由于方块是一个Layout， Layout滑动的话就是一整个方块滑动，而做不出想要的效果）
 
             prevNumList.clear();
             for(int j = 0; j < currentNumList.size(); j++){
@@ -442,10 +441,9 @@ public class GameView extends GridLayout {
         }
     }
 
-    private void resume(ArrayList<CellPoint> data) {
+    private void resume(@NonNull ArrayList<CellPoint> data) {
         for(CellPoint point : data){
             cells[point.getX()][point.getY()].setNum(point.getNum());
-            //TODO 出现的动画
         }
     }
 

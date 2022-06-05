@@ -87,11 +87,8 @@ public class Cell extends FrameLayout {
         }
     }
 
-    public TextView getCell(){
-        return showNumber;
-    }
 
-    public void animation(String flag){
+    public void animation(@NonNull String flag){
         if(flag.equals("create"))
             animation.setDuration(100);
         else
