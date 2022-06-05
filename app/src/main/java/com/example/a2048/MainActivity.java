@@ -1,5 +1,6 @@
 package com.example.a2048;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
@@ -135,8 +136,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             scoreUtil.insertScore(id, "best","current" , 0, 0);
         }
 
-        scoreUtil.setScore(id, "current", 0);
-
         bestScores.setText(String.valueOf(scoreUtil.getScore(id, "best")));
         bestRank.setText(getString(R.string.best_score_rank));
         currentScore.setText(String.valueOf(scoreUtil.getScore(id, "current")));
@@ -192,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void GameOver(View v){
+    public void GameOver(@NonNull View v){
         switch (v.getId()){
             case R.id.tv_reset:
                 gameView.reset();
